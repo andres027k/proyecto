@@ -1,0 +1,426 @@
+{% load static %}
+
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Mesa</title>
+    <style>
+
+    body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #111 40%,rgb(116, 49, 49) 100%);
+            margin: 0;
+            padding: 0;
+        }
+
+/* Estilo para la barra de navegación */
+.navbar {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.navbar .logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .logo-container .logo {
+    height: 50px;
+    transition: transform 0.3s, filter 0.3s;
+}
+
+.navbar .logo-container .logo:hover {
+    transform: scale(1.1);
+}
+
+.navbar .navbar-title {
+    color: white; /* Asegúrate de que el título sea blanco */
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 10px; /* Espacio entre el logo y el título */
+    transition: color 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center; /* Centra verticalmente el título con el logo */
+}
+
+.navbar .navbar-title:hover {
+    color: #ff4b2b; /* Cambia el color al pasar el cursor */
+    transform: scale(1.1);
+}
+
+.navbar .nav-links {
+    display: flex;
+    gap: 20px;  /* Espacio entre los enlaces */
+    margin-left: auto;  /* Empuja los enlaces hacia la derecha */
+}
+
+.navbar .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.navbar .nav-links a:hover {
+    background-color: #ff4b2b;
+    transform: scale(1.1);
+}
+
+.navbar .perfil-link {
+    margin-right: 20px;  /* Margen respecto a los demás elementos */
+    margin-left: 20px;   /* Margen respecto al logo */
+}
+
+.navbar .perfil-link img {
+    height: 30px;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.navbar .perfil-link img:hover {
+    transform: scale(1.1);
+}
+/* Contenedor principal que centra la encuesta */
+.survey-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin-top: 20px; /* Margen leve con la barra de navegación */
+}
+
+/* Contenedor del formulario */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 25px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8); /* Fondo blanco con transparencia */
+    animation: fadeIn 0.5s ease-in-out;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para el formulario */
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Estilos para inputs, selects y textarea */
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    background: rgba(255, 255, 255, 0.9); /* Fondo blanco con transparencia */
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #d9534f; /* Rojo */
+    outline: none;
+    box-shadow: inset 0 0 5px rgba(217, 83, 79, 0.3), 0 0 8px rgba(217, 83, 79, 0.5); /* Rojo */
+}
+
+/* Estilos para el botón */
+button {
+    grid-column: span 2;
+    width: 100%;
+    background: linear-gradient(90deg, #d9534f, #c9302c); /* Rojo */
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover en el botón */
+button:hover {
+    background: linear-gradient(90deg, #c9302c, #ac2925); /* Rojo oscuro */
+    transform: scale(1.05);
+}
+
+/* Estilos para los títulos */
+h1, h2 {
+    text-align: center;
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+h2 {
+    background: rgba(217, 83, 79, 0.1); /* Fondo rojo claro */
+    padding: 10px;
+    border-radius: 6px;
+    animation: fadeInTitle 1s ease-in-out;
+}
+
+/* Estilos para los labels */
+label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+    background: rgba(0, 0, 0, 0.05); /* Fondo negro claro */
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease-in-out;
+}
+
+label:hover {
+    background: rgba(0, 0, 0, 0.1); /* Fondo negro más oscuro al pasar el mouse */
+}
+
+/* Mensajes de error y éxito */
+.error, .success {
+    grid-column: span 2;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: none;
+}
+
+.error {
+    background: rgba(255, 0, 0, 0.1);
+    color: #d9534f;
+    border: 1px solid #d9534f;
+}
+
+.success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animación de entrada para los títulos */
+@keyframes fadeInTitle {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="{% static 'img/1000032882.jpg' %}" alt="San Felipe Logo" class="logo">
+        </div>
+        <h1 class="navbar-title">San Felipe</h1>
+        {% if user.is_authenticated %}
+            <!-- Icono de perfil, alineado a la izquierda -->
+            <a href="{% url 'perfil' %}" class="perfil-link">
+                <img src="{% static 'img/user.png' %}" alt="Perfil" class="icono-perfil">
+            </a>
+        {% else %}
+            <!-- Aquí puedes agregar un enlace para iniciar sesión si el usuario no está autenticado -->
+        {% endif %}
+        <nav class="nav-links">
+            <a href="/">Regresar</a>
+        </nav>
+    </div>
+
+<div class="survey-container">
+    <div class="container">
+        <h2>Reservar Mesa</h2>
+        <form id="reservaForm">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" required>
+
+            <label for="email">Correo:</label>
+            <input type="email" id="email" required>
+
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" required>
+
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" readonly required>
+
+            <label for="hora">Hora:</label>
+            <input type="time" id="hora" required>
+
+            <label for="mesa">Seleccionar Mesa:</label>
+            <select id="mesa" required>
+                <option value="">Cargando mesas...</option>
+            </select>
+
+            <label for="personas">Número de Personas:</label>
+            <input type="number" id="personas" min="1" required>
+
+            <label for="mensaje">Mensaje (opcional):</label>
+            <textarea id="mensaje" style="grid-column: span 2;"></textarea>
+
+            <button type="submit">Reservar</button>
+        </form>
+
+        <p id="mensajeError" class="error">Esta mesa ya ha sido reservada.</p>
+        <p id="mensajeExito" class="success">¡Reserva realizada con éxito!</p>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const now = new Date();
+
+    // Establecer la fecha actual en el campo de fecha
+    const today = now.toISOString().split("T")[0];
+    document.getElementById("fecha").value = today;
+
+    // Establecer límites de hora permitidos
+    const horaInput = document.getElementById("hora");
+    horaInput.setAttribute("min", "06:00");
+    horaInput.setAttribute("max", "15:00");
+
+    // Validar que la hora ingresada esté dentro del rango permitido
+    horaInput.addEventListener("input", function () {
+        if (horaInput.value < "06:00" || horaInput.value > "15:00") {
+            horaInput.value = "06:00"; // Si es inválido, lo ajusta a 06:00
+        }
+    });
+
+    // Cargar mesas disponibles desde Django
+    fetch("/mesas-disponibles/")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+            }
+            return response.json();
+        })
+        .then(data => {
+            const selectMesa = document.getElementById("mesa");
+            selectMesa.innerHTML = '<option value="">Seleccione una mesa</option>';
+
+            if (data.mesas.length === 0) {
+                selectMesa.innerHTML = '<option value="">No hay mesas disponibles</option>';
+                return;
+            }
+
+            data.mesas.forEach(mesa => {
+                const option = document.createElement("option");
+                option.value = mesa.id;
+                option.textContent = `Mesa ${mesa.numero}`;
+                selectMesa.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error("Error al obtener mesas:", error);
+            document.getElementById("mesa").innerHTML = '<option value="">Error al cargar mesas</option>';
+        });
+});
+
+// Manejar el envío del formulario
+document.getElementById("reservaForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const data = {
+        nombre: document.getElementById("nombre").value,
+        email: document.getElementById("email").value,
+        telefono: document.getElementById("telefono").value,
+        fecha: document.getElementById("fecha").value,
+        hora: document.getElementById("hora").value,
+        mesa: document.getElementById("mesa").value,
+        personas: document.getElementById("personas").value,
+        mensaje: document.getElementById("mensaje").value
+    };
+
+    fetch("/enviar-reserva/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-CSRFToken": getCSRFToken() },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById("mensajeError").textContent = data.error;
+            document.getElementById("mensajeError").style.display = "block";
+            document.getElementById("mensajeExito").style.display = "none";
+        } else {
+            document.getElementById("mensajeExito").style.display = "block";
+            document.getElementById("mensajeError").style.display = "none";
+            document.getElementById("reservaForm").reset();
+            // Recargar las mesas disponibles después de una reserva exitosa
+            cargarMesasDisponibles();
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
+
+// Obtener el token CSRF
+function getCSRFToken() {
+    return document.cookie.split("; ")
+        .find(row => row.startsWith("csrftoken="))
+        ?.split("=")[1];
+}
+
+// Función para cargar mesas disponibles
+function cargarMesasDisponibles() {
+    fetch("/mesas-disponibles/")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+            }
+            return response.json();
+        })
+        .then(data => {
+            const selectMesa = document.getElementById("mesa");
+            selectMesa.innerHTML = '<option value="">Seleccione una mesa</option>';
+
+            if (data.mesas.length === 0) {
+                selectMesa.innerHTML = '<option value="">No hay mesas disponibles</option>';
+                return;
+            }
+
+            data.mesas.forEach(mesa => {
+                const option = document.createElement("option");
+                option.value = mesa.id;
+                option.textContent = `Mesa ${mesa.numero}`;
+                selectMesa.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error("Error al obtener mesas:", error);
+            document.getElementById("mesa").innerHTML = '<option value="">Error al cargar mesas</option>';
+        });
+}
+</script>
+
+</body>
+</html>

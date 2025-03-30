@@ -1,0 +1,698 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Tienda - Categorías</title>
+    <link rel="stylesheet" href="{% static '/css/tienda.css' %}">
+    <style>
+        /* Todo el CSS previo permanece igual */
+        .categoria { display: none; }
+        .categoria.activa { display: block; }
+        .nav-categorias { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .nav-categorias button { padding: 10px; border: none; cursor: pointer; background: #d32f2f; color: white; border-radius: 5px; }
+        .nav-categorias button:hover { background: #b71c1c; }
+
+        .navbar {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+
+        .navbar:hover {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+        }
+
+        .navbar .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo-container .logo {
+            height: 60px;
+            transition: transform 0.4s ease, filter 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .logo-container .logo.reveal {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px) scale(0.9); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        .navbar .logo-container .logo:hover {
+            transform: scale(1.15) rotate(10deg);
+            filter: brightness(1.2);
+        }
+
+        .navbar .navbar-title {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-left: 15px;
+            letter-spacing: 1px;
+            transition: color 0.4s ease, transform 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .navbar-title.reveal {
+            animation: fadeInScale 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .navbar .navbar-title:hover {
+            color: #ff4b2b;
+            transform: scale(1.05);
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+            margin-left: auto;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: background-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            opacity: 0;
+        }
+
+        .navbar .nav-links a.reveal {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .navbar .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #ff4b2b;
+            transition: width 0.4s ease, left 0.4s ease;
+        }
+
+        .navbar .nav-links a:hover::after {
+            width: 60%;
+            left: 20%;
+        }
+
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 75, 43, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.3);
+        }
+
+        .navbar .perfil-link {
+            margin-right: 20px;
+            margin-left: 20px;
+        }
+
+        .navbar .perfil-link img {
+            height: 35px;
+            border-radius: 50%;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .perfil-link img.reveal {
+            animation: popIn 0.8s ease-out 0.4s forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.7) rotate(-10deg); }
+            70% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .navbar .perfil-link img:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+        }
+
+        body {
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .contador {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 10px;
+        }
+
+        .contador button {
+            width: 20px;
+            height: 20px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .contador button:hover {
+            background: #b71c1c;
+        }
+
+        .contador span {
+            font-size: 16px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .carrito {
+            display: none;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 300px;
+            height: 100%;
+            background: rgb(0, 0, 0);
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            z-index: 1001;
+        }
+
+        .carrito.activo {
+            display: block;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .overlay.activo {
+            display: block;
+        }
+
+        .cerrar-carrito {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        #listaCarrito li {
+            margin: 10px 0;
+        }
+
+        #botonPedir {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #botonPedir:hover {
+            background: #b71c1c;
+        }
+    </style>
+</head>
+<body>
+    <!-- Elemento oculto para pasar el estado de autenticación -->
+    <div id="auth-status" data-is-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}" style="display: none;"></div>
+
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="{% static 'img/1000032882.jpg' %}" alt="San Felipe Logo" class="logo reveal">
+            <h1 class="navbar-title reveal">San Felipe</h1>
+        </div>
+        {% if user.is_authenticated %}
+            <a href="{% url 'perfil' %}" class="perfil-link">
+                <img src="{% static 'img/user.png' %}" alt="Perfil" class="icono-perfil reveal">
+            </a>
+        {% endif %}
+        <nav class="nav-links">
+            <a href="/" class="reveal">Inicio</a>
+            <a href="/tienda/" class="reveal">Carta</a>
+            <a href="/nosotros/" class="reveal">Nosotros</a>
+            <a href="/sugerencias/" class="reveal">Sugerencias</a>
+        </nav>
+    </div>
+    <header>
+        <h1>🛒 Pedidos Online</h1>
+        <button id="verCarrito">🛒 (<span id="cantidadCarrito">0</span>)</button>
+    </header>
+    
+    <div id="overlay" class="overlay"></div>
+    
+    <div id="carrito" class="carrito">
+        <button id="cerrarCarrito" class="cerrar-carrito">✖</button>
+        <h2>Tu Carrito</h2>
+        <ul id="listaCarrito"></ul>
+        <p>Total: $<span id="total">0</span></p>
+        <button id="botonPedir">Pagar</button>
+    </div>
+    
+    <div class="nav-categorias">
+        <button onclick="mostrarCategoria('todos')"> Del Día </button>
+        <button onclick="mostrarCategoria('asados')"> Carta </button>
+    </div>
+
+    <main>
+        <div id="todos" class="categoria activa productos">
+            <h2>Platos del Día</h2>
+            <div class="productos">
+                {% for producto in productos %}
+                    {% if producto.disponible %}
+                    <div class="producto">
+                        {% if producto.imagen and producto.imagen.url %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                        {% else %}
+                            <img src="/static/img/default.png" alt="Imagen no disponible">
+                        {% endif %}
+                        <div class="info-producto">
+                            <h3>{{ producto.nombre }}</h3>
+                            <p class="precio">${{ producto.precio }}</p>
+                            <button onclick="agregarAlCarrito('{{ producto.nombre|escapejs }}', parseFloat('{{ producto.precio|escapejs }}'))">Añadir</button>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="producto no-disponible">
+                        {% if producto.imagen and producto.imagen.url %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                        {% else %}
+                            <img src="/static/img/default.png" alt="Imagen no disponible">
+                        {% endif %}
+                        <div class="info-producto">
+                            <h3>{{ producto.nombre }}</h3>
+                            <p class="precio">${{ producto.precio }}</p>
+                            <button disabled style="background: gray; cursor: not-allowed;">No Disponible</button>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div id="asados" class="categoria productos">
+            <h1>Platos a la Carta</h1>
+            <h2>Asados</h2>
+            <div class="productos">
+                <div class="producto">
+                    <img src="{% static 'img/churrasco.jpeg' %}" alt="Churrasco">
+                    <div class="info-producto">
+                        <h3>Churrasco</h3>
+                        <p>Jugoso corte de carne de res a la parrilla, cocinado a la perfección con un toque ahumado que resalta su sabor natural. Acompañado de papas fritas y ensalada fresca.</p>
+                        <p class="precio">$26,000</p>
+                        <button onclick="agregarAlCarrito('Churrasco', 26000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/pechuga.webp' %}" alt="Pechuga">
+                    <div class="info-producto">
+                        <h3>Pechuga</h3>
+                        <p>Tierna pechuga de pollo asada, marinada con especias que le dan un sabor irresistible. Servida con vegetales salteados y una salsa especial de la casa.</p>
+                        <p class="precio">$23,000</p>
+                        <button onclick="agregarAlCarrito('Pechuga', 23000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/lomo.webp' %}" alt="Lomo de Cerdo">
+                    <div class="info-producto">
+                        <h3>Lomo de Cerdo</h3>
+                        <p>Suculento lomo de cerdo a la plancha, glaseado con una reducción dulce y especiada que equilibra su textura jugosa. Ideal con puré de papa o arroz blanco.</p>
+                        <p class="precio">$27,000</p>
+                        <button onclick="agregarAlCarrito('Lomo De Cerdo', 27000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/Parrillada.jpg' %}" alt="Parrillada">
+                    <div class="info-producto">
+                        <h3>Parrillada</h3>
+                        <p>Una generosa combinación de carnes a la parrilla: chorizo, costilla, pollo y res, acompañada de arepa, papa asada y chimichurri casero para los amantes de los sabores intensos.</p>
+                        <p class="precio">$27,000</p>
+                        <button onclick="agregarAlCarrito('Parrillada', 27000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/picada.jpg' %}" alt="Picada">
+                    <div class="info-producto">
+                        <h3>Picada</h3>
+                        <p>Fiesta de sabores en un solo plato: trozos de carne, pollo, chorizo, papa criolla, yuca y plátano maduro, perfecta para compartir o disfrutar en solitario.</p>
+                        <p class="precio">$30,000</p>
+                        <button onclick="agregarAlCarrito('Picada', 30000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/Costillas.jpg' %}" alt="Costillas BBQ">
+                    <div class="info-producto">
+                        <h3>Costillas BBQ</h3>
+                        <p>Costillas de cerdo bañadas en una salsa BBQ dulce y ahumada, cocidas lentamente hasta que la carne se desprende del hueso. Acompañadas de maíz tierno y ensalada coleslaw.</p>
+                        <p class="precio">$25,000</p>
+                        <button onclick="agregarAlCarrito('Costillas BBQ', 25000)">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Pescados</h2>
+            <div class="productos">
+                <div class="producto">
+                    <img src="{% static 'img/Trucha d.webp' %}" alt="Trucha Dorada">
+                    <div class="info-producto">
+                        <h3>Trucha Dorada</h3>
+                        <p>Trucha fresca frita hasta lograr un dorado crujiente por fuera y tierna por dentro, acompañada de patacones y una salsa cítrica que realza su sabor.</p>
+                        <p class="precio">$29,000</p>
+                        <button onclick="agregarAlCarrito('Trucha Dorada', 29000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/Trucha j.jpg' %}" alt="Trucha al Ajillo">
+                    <div class="info-producto">
+                        <h3>Trucha al Ajillo</h3>
+                        <p>Delicada trucha bañada en una salsa de ajo y mantequilla, con un toque de hierbas frescas. Servida con arroz blanco y vegetales al vapor.</p>
+                        <p class="precio">$32,000</p>
+                        <button onclick="agregarAlCarrito('Trucha Al Ajillo', 32000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/Trucha g.jpeg' %}" alt="Trucha Gratinada">
+                    <div class="info-producto">
+                        <h3>Trucha Gratinada</h3>
+                        <p>Trucha cubierta con una capa de queso fundido y gratinada al horno, acompañada de papas al vapor y una crema suave que deleita el paladar.</p>
+                        <p class="precio">$35,000</p>
+                        <button onclick="agregarAlCarrito('Trucha Gratinada', 35000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/Trucha ca.jpg' %}" alt="Trucha en Camarones">
+                    <div class="info-producto">
+                        <h3>Trucha en Camarones</h3>
+                        <p>Exquisita trucha cocinada en una salsa cremosa con camarones frescos, un plato sofisticado que combina lo mejor del mar y el río. Incluye arroz y ensalada.</p>
+                        <p class="precio">$38,000</p>
+                        <button onclick="agregarAlCarrito('Trucha En Camarones', 38000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/Mojarra.avif' %}" alt="Mojarra">
+                    <div class="info-producto">
+                        <h3>Mojarra</h3>
+                        <p>Mojarra frita entera, crujiente y dorada, servida con patacones, arroz con coco y una ensalada tropical para una experiencia costeña auténtica.</p>
+                        <p class="precio">$27,000</p>
+                        <button onclick="agregarAlCarrito('Mojarra', 27000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/cazuela.jpeg' %}" alt="Cazuela de Camarones">
+                    <div class="info-producto">
+                        <h3>Cazuela de Camarones</h3>
+                        <p>Cremosa cazuela repleta de camarones jugosos en una base de leche de coco y especias, acompañada de arroz blanco y tajadas de plátano maduro.</p>
+                        <p class="precio">$32,000</p>
+                        <button onclick="agregarAlCarrito('Cazuela De Camarones', 32000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/apanado.jpg' %}" alt="Cazuela Marinera">
+                    <div class="info-producto">
+                        <h3>Cazuela Marinera</h3>
+                        <p>Mezcla irresistible de mariscos (camarones, calamares y pescado) en una salsa rica y sabrosa, perfecta con arroz o pan para mojar.</p>
+                        <p class="precio">$34,000</p>
+                        <button onclick="agregarAlCarrito('Cazuela Marinera', 34000)">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Arroz</h2>
+            <div class="productos">
+                <div class="producto">
+                    <img src="{% static 'img/arroz x.jpg' %}" alt="Arroz Mixto">
+                    <div class="info-producto">
+                        <h3>Arroz Mixto</h3>
+                        <p>Arroz salteado con trozos de carne, pollo, verduras frescas y un toque de salsa oriental, ideal para quienes buscan variedad en cada bocado.</p>
+                        <p class="precio">$18,000</p>
+                        <button onclick="agregarAlCarrito('Arroz Mixto', 18000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/arroz p.jpeg' %}" alt="Arroz con Pollo">
+                    <div class="info-producto">
+                        <h3>Arroz con Pollo</h3>
+                        <p>Clásico arroz amarillo con pollo desmechado, guisado con especias tradicionales y servido con tajadas de plátano maduro para un sabor casero.</p>
+                        <p class="precio">$17,000</p>
+                        <button onclick="agregarAlCarrito('Arroz con Pollo', 17000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/arroz t.jpg' %}" alt="Arroz Tapado">
+                    <div class="info-producto">
+                        <h3>Arroz Tapado</h3>
+                        <p>Arroz cubierto con una capa de carne molida sazonada, huevo frito y vegetales, un plato reconfortante lleno de texturas y sabores.</p>
+                        <p class="precio">$19,000</p>
+                        <button onclick="agregarAlCarrito('Arroz Tapado', 19000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/arroz m.jpg' %}" alt="Arroz a la Marinera">
+                    <div class="info-producto">
+                        <h3>Arroz a la Marinera</h3>
+                        <p>Arroz cocinado con mariscos frescos (camarones, mejillones y calamares) en una salsa de tomate y especias, un deleite para los amantes del mar.</p>
+                        <p class="precio">$34,000</p>
+                        <button onclick="agregarAlCarrito('Arroz a la Marinera', 34000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/arros cama.jpg' %}" alt="Arroz con Camarones">
+                    <div class="info-producto">
+                        <h3>Arroz con Camarones</h3>
+                        <p>Arroz cremoso mezclado con camarones jugosos y un toque de ajo, acompañado de ensalada fresca para equilibrar su intensidad.</p>
+                        <p class="precio">$32,000</p>
+                        <button onclick="agregarAlCarrito('Arroz con Camarones', 32000)">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Comidas Rápidas</h2>
+            <div class="productos">
+                <div class="producto">
+                    <img src="{% static 'img/mazor.jpg' %}" alt="Mazorcada">
+                    <div class="info-producto">
+                        <h3>Mazorcada</h3>
+                        <p>Deliciosa mezcla de maíz tierno, queso rallado, carne desmechada, papa chongo y salsas cremosas, perfecta para un antojo rápido y sabroso.</p>
+                        <p class="precio">$22,000</p>
+                        <button onclick="agregarAlCarrito('Mazorcada', 22000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/pata.webp' %}" alt="Patacolo">
+                    <div class="info-producto">
+                        <h3>Patacolo</h3>
+                        <p>Combinación irresistible de patacón crujiente con pollo desmechado, queso fundido y salsa de la casa, ideal para compartir o disfrutar solo.</p>
+                        <p class="precio">$21,000</p>
+                        <button onclick="agregarAlCarrito('Patacolo', 21000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/salchipapas.jpg' %}" alt="Salchipapa">
+                    <div class="info-producto">
+                        <h3>Salchipapa</h3>
+                        <p>Clásico favorito: papas fritas crujientes con salchichas en trozos, bañadas en salsas y un toque de queso rallado para un placer sencillo.</p>
+                        <p class="precio">$13,000</p>
+                        <button onclick="agregarAlCarrito('Salchipapa', 13000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/poloo cuarto.jpeg' %}" alt="Pollo Broster 1/4">
+                    <div class="info-producto">
+                        <h3>Pollo Broster 1/4</h3>
+                        <p>Cuarto de pollo crujiente y jugoso, empanizado con especias secretas y frito a la perfección, acompañado de papas fritas y ensalada.</p>
+                        <p class="precio">$13,000</p>
+                        <button onclick="agregarAlCarrito('Pollo Broster 1/4', 13000)">Añadir</button>
+                    </div>
+                </div>
+                <div class="producto">
+                    <img src="{% static 'img/pollo medio.jpeg' %}" alt="Pollo Broster Medio">
+                    <div class="info-producto">
+                        <h3>Pollo Broster Medio</h3>
+                        <p>Medio pollo broster dorado y sabroso, ideal para satisfacer el hambre con su textura crujiente y jugosa, servido con papas y salsa.</p>
+                        <p class="precio">$20,000</p>
+                        <button onclick="agregarAlCarrito('Pollo Broster Medio', 20000)">Añadir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        // Leer el estado de autenticación desde el elemento oculto
+        const isAuthenticated = document.getElementById('auth-status').dataset.isAuthenticated === 'true';
+
+        // Carrito de compras
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+        // Mostrar u ocultar categorías
+        function mostrarCategoria(id) {
+            document.querySelectorAll('.categoria').forEach(cat => cat.classList.remove('activa'));
+            document.getElementById(id).classList.add('activa');
+        }
+
+        // Agregar al carrito (inicia con cantidad 1)
+        function agregarAlCarrito(nombre, precio) {
+            const itemExistente = carrito.find(item => item.nombre === nombre);
+            if (itemExistente) {
+                itemExistente.cantidad += 1;
+            } else {
+                carrito.push({ nombre: nombre, precio: precio, cantidad: 1 });
+            }
+            actualizarCarrito();
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            console.log('Carrito actualizado:', carrito);
+        }
+
+        // Cambiar la cantidad en el carrito
+        function cambiarCantidad(index, cambio) {
+            if (index >= 0 && index < carrito.length) {
+                carrito[index].cantidad += cambio;
+                if (carrito[index].cantidad <= 0) {
+                    carrito.splice(index, 1);
+                }
+                actualizarCarrito();
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                console.log('Cantidad cambiada, carrito:', carrito);
+            }
+        }
+
+        // Actualizar el carrito en la interfaz
+        function actualizarCarrito() {
+            const listaCarrito = document.getElementById('listaCarrito');
+            const cantidadCarrito = document.getElementById('cantidadCarrito');
+            const totalElement = document.getElementById('total');
+
+            listaCarrito.innerHTML = '';
+
+            if (carrito.length === 0) {
+                listaCarrito.innerHTML = '<li>Tu carrito está vacío</li>';
+                cantidadCarrito.textContent = '0';
+                totalElement.textContent = '0';
+                return;
+            }
+
+            let total = 0;
+
+            carrito.forEach((item, index) => {
+                const subtotal = item.precio * item.cantidad;
+                total += subtotal;
+
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    ${item.nombre} - $${item.precio.toLocaleString()} x 
+                    <span class="contador">
+                        <button onclick="cambiarCantidad(${index}, -1)">-</button>
+                        <span class="cantidad">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad(${index}, 1)">+</button>
+                    </span>
+                    = $${subtotal.toLocaleString()}
+                `;
+                listaCarrito.appendChild(li);
+            });
+
+            cantidadCarrito.textContent = carrito.length;
+            totalElement.textContent = total.toLocaleString();
+            console.log('Interfaz actualizada - Total:', total, 'Items únicos:', carrito.length);
+        }
+
+        // Mostrar/Ocultar carrito
+        document.getElementById('verCarrito').addEventListener('click', () => {
+            const carritoElement = document.getElementById('carrito');
+            const overlayElement = document.getElementById('overlay');
+            carritoElement.classList.toggle('activo');
+            overlayElement.classList.toggle('activo');
+            actualizarCarrito();
+            console.log('Carrito mostrado/toggle');
+        });
+
+        document.getElementById('cerrarCarrito').addEventListener('click', () => {
+            document.getElementById('carrito').classList.remove('activo');
+            document.getElementById('overlay').classList.remove('activo');
+            console.log('Carrito cerrado');
+        });
+
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('carrito').classList.remove('activo');
+            document.getElementById('overlay').classList.remove('activo');
+            console.log('Overlay cerrado');
+        });
+
+        // Redirigir al hacer clic en "Pagar", guardar pedido y limpiar carrito
+        document.getElementById("botonPedir").addEventListener("click", function () {
+            if (carrito.length === 0) {
+                alert("⚠️ Tu carrito está vacío. Agrega productos antes de hacer un pedido.");
+                return;
+            }
+            localStorage.setItem('pedido', JSON.stringify(carrito));
+            carrito = [];
+            localStorage.removeItem('carrito');
+            actualizarCarrito();
+            console.log('Carrito limpiado después del pedido');
+            if (isAuthenticated) {
+                window.location.href = "/pedido/";
+                console.log('Usuario autenticado, redirigiendo a /pedido/, pedido guardado');
+            } else {
+                window.location.href = "/login/";
+                console.log('Usuario no autenticado, redirigiendo a /login/, pedido guardado');
+            }
+        });
+
+        // Animación de entrada para la navbar y carga inicial del carrito
+        document.addEventListener("DOMContentLoaded", function () {
+            const navbarElements = document.querySelectorAll(".navbar .reveal");
+            navbarElements.forEach((element, index) => {
+                setTimeout(() => element.classList.add("reveal-active"), index * 150);
+            });
+            actualizarCarrito();
+            console.log('Página cargada, carrito inicial:', carrito);
+        });
+
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            setTimeout(() => document.body.style.opacity = '1', 100);
+        });
+    </script>
+</body>
+</html>

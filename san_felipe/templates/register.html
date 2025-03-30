@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <main class="register-container">
+        <form method="post" action="{% url 'register' %}" class="register-form" id="register-form">
+            {% csrf_token %}
+            <h2>Registro</h2>
+
+            <!-- Muestra los mensajes de error -->
+            <div class="messages" id="error-messages">
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="error-message">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-user"></i>
+                <input type="text" name="username" placeholder="Nombre del Usuario" value="{{ request.POST.username }}" required>
+            </div>
+            <div class="input-group">
+                <i class="fa fa-envelope"></i>
+                <input type="email" name="email" placeholder="Correo Electrónico" value="{{ request.POST.email }}" required>
+            </div>
+            <div class="input-group">
+                <i class="fa fa-phone"></i>
+                <input type="text" name="telefono" placeholder="Número de Teléfono" value="{{ request.POST.telefono }}" required>
+            </div>
+            <div class="input-group">
+                <i class="fa fa-map-marker-alt"></i>
+                <input type="text" name="direccion" placeholder="Dirección" value="{{ request.POST.direccion }}" required>
+            </div>
+            <div class="input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" placeholder="Contraseña" required>
+            </div>
+            <div class="input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="confirm_password" placeholder="Confirmar Contraseña" required>
+            </div>
+            
+            <button type="submit" class="register-button">Registrarse</button>
+
+            <p class="login-link">¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let form = document.getElementById("register-form");
+            let username = form.querySelector("input[name='username']");
+            let password = form.querySelector("input[name='password']");
+            let confirmPassword = form.querySelector("input[name='confirm_password']");
+            let errorMessages = document.getElementById("error-messages");
+
+            form.addEventListener("submit", function (event) {
+                let valid = true;
+
+                if (password.value !== confirmPassword.value) {
+                    password.value = "";
+                    confirmPassword.value = "";
+                    if (errorMessages) {
+                        errorMessages.innerHTML = "<p class='error-message'>Las contraseñas no coinciden.</p>";
+                        errorMessages.style.display = "block";
+                    }
+                    valid = false;
+                }
+
+                if (username.value === "usuario_existente") {  // Simulación de nombre de usuario existente
+                    username.value = "";
+                    if (errorMessages) {
+                        errorMessages.innerHTML += "<p class='error-message'>El nombre de usuario ya está en uso.</p>";
+                        errorMessages.style.display = "block";
+                    }
+                    valid = false;
+                }
+
+                if (!valid) {
+                    event.preventDefault();
+                }
+            });
+
+            form.querySelectorAll("input").forEach(input => {
+                input.addEventListener("input", function () {
+                    if (errorMessages) {
+                        errorMessages.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

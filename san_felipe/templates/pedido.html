@@ -1,0 +1,577 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Pedido | San Felipe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #111 40%,rgb(116, 49, 49) 100%);
+            margin: 0;
+            padding: 0;
+        }
+
+        .animate-on-load {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .animate-on-load.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .navbar {
+            background-color: #000;
+            color: #fff;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .navbar .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            height: 60px;
+            transition: transform 0.4s ease;
+        }
+
+        .navbar .logo:hover {
+            transform: rotate(15deg) scale(1.2);
+        }
+
+        .navbar .navbar-title {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-left: 15px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .navbar .navbar-title:hover {
+            color: #ff4b2b;
+            transform: scale(1.05);
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            background-color: #ff4b2b;
+            transform: translateY(-3px);
+        }
+
+        .pedido-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .pedido-container h1 {
+            color: #000;
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .pedido-container h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background-color: #ff4b2b;
+            transition: width 0.8s ease;
+        }
+
+        .pedido-container.reveal h1::after {
+            width: 80px;
+        }
+
+        .pedido-lista {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .pedido-lista li {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            opacity: 0;
+        }
+
+        .pedido-lista li.reveal {
+            opacity: 1;
+            animation: flipIn 0.8s ease forwards;
+        }
+
+        @keyframes flipIn {
+            0% {
+                opacity: 0;
+                transform: perspective(400px) rotateY(90deg);
+            }
+            100% {
+                opacity: 1;
+                transform: perspective(400px) rotateY(0deg);
+            }
+        }
+
+        .pedido-lista li:hover {
+            transform: scale(1.03);
+        }
+
+        .pedido-lista li .nombre {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff4b2b;
+        }
+
+        .pedido-lista li .precio {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .pedido-vacio {
+            font-size: 18px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .pedido-container h2 {
+            color: #000;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .method {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 150px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+        }
+
+        .method.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .method input[type="radio"] {
+            display: none;
+        }
+
+        .method img {
+            width: 60px;
+            height: auto;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .method h3 {
+            font-size: 18px;
+            color: #ff4b2b;
+            margin: 0;
+        }
+
+        .method:hover {
+            transform: scale(1.05);
+            background-color: #1a1a1a;
+        }
+
+        .method.selected {
+            background-color: #ff4b2b;
+            transform: scale(1.08);
+        }
+
+        .method.selected h3 {
+            color: #fff;
+        }
+
+        .method.selected img {
+            transform: scale(1.1);
+        }
+
+        .qr-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 350px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .qr-modal-content.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .qr-modal-content h3 {
+            color: #ff4b2b;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .qr-modal-content p {
+            color: #000;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .qr-modal-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .qr-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #ff4b2b;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .qr-close:hover {
+            color: #d32f2f;
+        }
+
+        .confirmar-btn {
+            background-color: #ff4b2b;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .confirmar-btn:hover {
+            background-color: #d32f2f;
+            transform: scale(1.1);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ff4b2b;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    
+        .pedido-container p.total-items {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .pedido-lista li .cantidad {
+            font-size: 16px;
+            color: #ccc;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar animate-on-load">
+        <div class="logo-container animate-on-load">
+            <img src="{% static 'img/1000032882.jpg' %}" alt="San Felipe Logo" class="logo animate-on-load">
+            <h1 class="navbar-title animate-on-load">San Felipe</h1>
+        </div>
+        <nav class="nav-links animate-on-load">
+            <a href="/" class="animate-on-load">Regresar</a>
+        </nav>
+    </div>
+
+    <div class="pedido-container animate-on-load">
+        <h1 class="animate-on-load">Confirmación de Pedido</h1>
+        <p class="total-items">Productos seleccionados: <span id="numProductos">0</span></p>
+        <ul id="pedidoLista" class="pedido-lista"></ul>
+
+        <h2 class="animate-on-load">Método de Pago</h2>
+        <form id="formPago" class="animate-on-load">
+            <div class="payment-methods">
+                <label class="method animate-on-load">
+                    <input type="radio" name="metodo_pago" value="nequi" required>
+                    <img src="{% static 'img/logonq.jpg' %}" alt="Nequi">
+                    <h3>Nequi</h3>
+                </label>
+                <label class="method animate-on-load">
+                    <input type="radio" name="metodo_pago" value="daviplata" required>
+                    <img src="{% static 'img/logodp.webp' %}" alt="Daviplata">
+                    <h3>Daviplata</h3>
+                </label>
+                <label class="method animate-on-load">
+                    <input type="radio" name="metodo_pago" value="casa" required>
+                    <img src="https://cdn-icons-png.flaticon.com/512/753/753317.png" alt="Pago en Casa">
+                    <h3>Pagar en Casa</h3>
+                </label>
+            </div>
+        </form>
+
+        <div id="qrModal" class="qr-modal">
+            <div class="qr-modal-content">
+                <span class="qr-close">×</span>
+                <h3 id="qrTitle"></h3>
+                <p id="qrMessage"></p>
+                <img id="qrImagen" src="" alt="QR de pago">
+            </div>
+        </div>
+
+        <button type="button" id="botonConfirmarPedido" class="confirmar-btn animate-on-load">Confirmar Pedido</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Animación de entrada para la página
+            const elementsToAnimate = document.querySelectorAll(".animate-on-load");
+            elementsToAnimate.forEach((element, index) => {
+                setTimeout(() => element.classList.add("reveal"), index * 100);
+            });
+    
+            // Mostrar ítems del pedido con cantidades y total
+            const pedidoLista = document.getElementById("pedidoLista");
+            const numProductos = document.getElementById("numProductos");
+            const pedido = JSON.parse(localStorage.getItem("pedido")) || [];
+            console.log("Pedido cargado en pedido.html:", pedido);
+    
+            if (pedido.length === 0) {
+                const emptyItem = document.createElement("li");
+                emptyItem.className = "pedido-vacio";
+                emptyItem.textContent = "No hay ítems en tu pedido.";
+                pedidoLista.appendChild(emptyItem);
+                setTimeout(() => emptyItem.classList.add("reveal"), 600);
+                numProductos.textContent = "0";
+            } else {
+                let total = 0;
+                pedido.forEach((producto, index) => {
+                    const subtotal = producto.precio * producto.cantidad;
+                    total += subtotal;
+                    const item = document.createElement("li");
+                    item.innerHTML = `
+                        <span class="nombre">${producto.nombre}</span>
+                        <span class="cantidad">x${producto.cantidad}</span>
+                        <span class="precio">$${subtotal.toLocaleString('es-CO')}</span>
+                    `;
+                    pedidoLista.appendChild(item);
+                    setTimeout(() => item.classList.add("reveal"), 600 + index * 150);
+                });
+                numProductos.textContent = pedido.length; // Número de productos seleccionados
+                // Mostrar el total general
+                const totalItem = document.createElement("li");
+                totalItem.innerHTML = `<span class="nombre">Total</span><span class="precio">$${total.toLocaleString('es-CO')}</span>`;
+                pedidoLista.appendChild(totalItem);
+                setTimeout(() => totalItem.classList.add("reveal"), 600 + pedido.length * 150);
+            }
+    
+            // Manejo de métodos de pago
+            const methods = document.querySelectorAll(".method");
+            const qrModal = document.getElementById("qrModal");
+            const qrModalContent = document.querySelector(".qr-modal-content");
+            const qrTitle = document.getElementById("qrTitle");
+            const qrMessage = document.getElementById("qrMessage");
+            const qrImagen = document.getElementById("qrImagen");
+            const closeModal = document.querySelector(".qr-close");
+    
+            methods.forEach(method => {
+                method.addEventListener("click", function () {
+                    methods.forEach(m => m.classList.remove("selected"));
+                    this.classList.add("selected");
+    
+                    const radio = this.querySelector("input[type='radio']");
+                    radio.checked = true;
+    
+                    if (radio.value === "nequi") {
+                        qrTitle.textContent = "Paga con Nequi";
+                        qrMessage.textContent = "Escanea este código QR con la app de Nequi para completar tu pago.";
+                        qrImagen.src = "{% static 'img/qr_nequi.png' %}";
+                        qrModal.style.display = "flex";
+                        setTimeout(() => qrModalContent.classList.add("show"), 10);
+                    } else if (radio.value === "daviplata") {
+                        qrTitle.textContent = "Paga con Daviplata";
+                        qrMessage.textContent = "Usa la app de Daviplata para escanear este QR y finalizar tu pedido.";
+                        qrImagen.src = "{% static 'img/qr_dp.jpeg' %}";
+                        qrModal.style.display = "flex";
+                        setTimeout(() => qrModalContent.classList.add("show"), 10);
+                    } else if (radio.value === "casa") {
+                        qrModal.style.display = "none";
+                    }
+                });
+            });
+    
+            closeModal.addEventListener("click", function () {
+                qrModalContent.classList.remove("show");
+                setTimeout(() => qrModal.style.display = "none", 300);
+            });
+    
+            window.addEventListener("click", function (event) {
+                if (event.target === qrModal) {
+                    qrModalContent.classList.remove("show");
+                    setTimeout(() => qrModal.style.display = "none", 300);
+                }
+            });
+    
+            // Confirmar pedido con notificación animada y envío a dos endpoints
+            document.getElementById("botonConfirmarPedido").addEventListener("click", function () {
+                if (pedido.length === 0) {
+                    showNotification("No hay ítems para confirmar.", false);
+                    return;
+                }
+    
+                const metodoPago = document.querySelector('input[name="metodo_pago"]:checked');
+                if (!metodoPago) {
+                    showNotification("Por favor, selecciona un método de pago.", false);
+                    return;
+                }
+    
+                const data = {
+                    pedido: pedido,
+                    metodo_pago: metodoPago.value
+                };
+    
+                // Función para enviar datos a un endpoint
+                function enviarDatos(endpoint) {
+                    return fetch(endpoint, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCookie("csrftoken"),
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json());
+                }
+    
+                // Enviar a ambos endpoints y manejar respuestas
+                Promise.all([enviarDatos("/enviar-pedido/"), enviarDatos("/confirmar-pedido/")])
+                .then(([respuesta1, respuesta2]) => {
+                    console.log("Respuesta de /enviar-pedido/:", respuesta1);
+                    console.log("Respuesta de /confirmar-pedido/:", respuesta2);
+                    showNotification("¡Pedido confirmado!", true);
+                    localStorage.removeItem("pedido");
+                    setTimeout(() => window.location.href = "/", 2000);
+                })
+                .catch(error => {
+                    console.error("Error en el proceso de pedido:", error);
+                    showNotification("Hubo un problema al procesar tu pedido.", false);
+                });
+            });
+    
+            // Función para mostrar notificaciones
+            function showNotification(message, success) {
+                const notification = document.createElement("div");
+                notification.className = "notification";
+                notification.textContent = message;
+                if (!success) notification.style.backgroundColor = "#d32f2f";
+                document.body.appendChild(notification);
+    
+                setTimeout(() => notification.classList.add("show"), 10);
+                setTimeout(() => {
+                    notification.classList.remove("show");
+                    setTimeout(() => notification.remove(), 300);
+                }, 2000);
+            }
+    
+            // Obtener el token CSRF
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== "") {
+                    const cookies = document.cookie.split(";");
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.startsWith(name + "=")) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        });
+    </script>
+    
+</body>
+</html>

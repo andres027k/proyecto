@@ -1,0 +1,240 @@
+/* Estilos generales */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #111 40%, rgb(116, 49, 49) 100%);
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.categoria { 
+    display: none; 
+}
+.categoria.activa { 
+    display: block; 
+}
+.nav-categorias { 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    margin-bottom: 20px; 
+}
+.nav-categorias button { 
+    padding: 10px; 
+    border: none; 
+    cursor: pointer; 
+    background: #d32f2f; 
+    color: white; 
+    border-radius: 5px; 
+}
+.nav-categorias button:hover { 
+    background: #b71c1c; 
+}
+
+/* Encabezado */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgb(0, 0, 0);
+    color: white;
+    border-bottom: 3px solid red;
+    margin: 10px;
+}
+
+/* Título */
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Botón Carrito */
+#verCarrito {
+    background: red;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+#verCarrito:hover {
+    background: #c40000;
+}
+
+/* Contenedor de productos */
+.productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Tarjetas de productos */
+.producto {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 12px rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+}
+
+.producto:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Imagen del producto */
+.producto img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 3px solid rgb(255, 255, 255);
+}
+
+/* Información del producto */
+.info-producto {
+    padding: 15px;
+    text-align: center;
+}
+
+/* Nombre del producto */
+.info-producto h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #fff;
+}
+
+/* Precio */
+.precio {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff4444;
+    margin: 8px 0;
+}
+
+/* Botón "Añadir" */
+.info-producto button {
+    background: linear-gradient(135deg, #c40000, #ff4444);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    width: 100%;
+    transition: transform 0.2s ease-in-out, background 0.3s;
+}
+
+.info-producto button:hover {
+    background: linear-gradient(135deg, #ff4444, #c40000);
+    transform: scale(1.05);
+}
+
+/* Carrito */
+.carrito {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 300px;
+    height: 100vh;
+    background: rgb(0, 0, 0);
+    box-shadow: -3px 0px 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 20000; /* Asegura que el carrito esté sobre todo */
+}
+
+/* Fondo oscuro de superposición */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 19999; /* Justo debajo del carrito */
+    display: none;
+}
+
+.carrito.mostrar {
+    right: 0;
+}
+
+.overlay.mostrar {
+    display: block;
+}
+
+/* Lista del carrito */
+#listaCarrito {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Botón de eliminar producto */
+.eliminar-producto {
+    background: none;
+    border: none;
+    font-size: 10px;
+    color: red;
+    cursor: pointer;
+    padding: 1px;
+    margin-left: 5px;
+}
+
+/* Botón "Pedir" */
+#botonPedir {
+    margin-top: 10px;
+    width: 100%;
+    background: linear-gradient(135deg, #c40000, #ff4444);
+    border: none;
+    padding: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+#botonPedir:hover {
+    background: linear-gradient(135deg, #ff4444, #c40000);
+    transform: scale(1.05);
+}
+
+/* Botón para cerrar el carrito */
+.cerrar-carrito {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: red;
+    cursor: pointer;
+}
+
+/* Botón para eliminar productos del carrito */
+.carrito ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.carrito ul li button {
+    background: none;
+    border: none;
+    color: #ff4444;
+    font-size: 12px;
+    cursor: pointer;
+}

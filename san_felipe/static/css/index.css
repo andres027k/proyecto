@@ -1,0 +1,273 @@
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #111 40%,rgb(116, 49, 49) 100%);
+    margin: 0;
+    padding: 0;
+}
+
+.carrusel-container {
+    width: 100vw; /* Ocupar todo el ancho de la pantalla */
+    overflow: hidden; /* Evita el desbordamiento */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    position: relative;
+    background: #000; /* Color de fondo opcional */
+}
+
+.carrusel-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.carrusel {
+    display: flex;
+    gap: 15px;
+    width: max-content;
+    position: relative;
+    animation: desplazamiento 10s linear infinite; /* Animación infinita */
+}
+
+/* Duplicar elementos para lograr efecto continuo */
+.carrusel .plato {
+    flex: 0 0 300px; /* Tamaño fijo de las tarjetas */
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    text-align: center;
+    padding-bottom: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+}
+
+/* Asegura que la animación sea fluida duplicando las tarjetas */
+@keyframes desplazamiento {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Evita cortes en las imágenes */
+.plato img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Título asegurado arriba */
+.titulo {
+    position: relative;
+    z-index: 10;
+    background: #000;
+    color: white;
+    padding: 10px;
+    font-size: 24px;
+    text-align: center;
+    width: 100%;
+}
+
+
+/* Botón "Ordenar" */
+.boton-ordenar {
+    background: linear-gradient(135deg, #c40000, #ff4444);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    width: 80%;
+    transition: transform 0.2s ease-in-out, background 0.3s;
+}
+
+.boton-ordenar:hover {
+    background: linear-gradient(135deg, #ff4444, #c40000);
+    transform: scale(1.05);
+}
+
+
+.mapa-seccion {
+    text-align: center;
+    padding: 50px 20px;
+    color: white;
+}
+
+.titulo-seccion {
+    font-size: 36px;
+    margin-bottom: 30px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.carousel {
+    position: relative;
+    width: 100vw;
+    height: 60vh;
+    overflow: hidden;
+    background-color: black; /* Fondo negro para el carrusel */
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Sombra sutil */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel img {
+    width: 95%; /* Reducir un poco el tamaño de las imágenes */
+    height: 90%; /* Mantener la proporción de las imágenes */
+    object-fit: cover;
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    border-radius: 15px; /* Bordes redondeados en las imágenes */
+}
+
+.carousel img.active {
+    display: block;
+    opacity: 1;
+}
+
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro con opacidad */
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.prev:hover, .next:hover {
+    background-color: red; /* Rojo en hover */
+    transform: translateY(-50%) scale(1.1); /* Aumenta el tamaño al pasar el cursor */
+}
+
+.prev {
+    left: 20px;
+}
+
+.next {
+    right: 20px;
+}
+
+/* Agregando un overlay semi-transparente para los controles */
+.carousel:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Overlay oscuro */
+    border-radius: 15px; /* Bordes redondeados */
+    z-index: 1;
+}
+
+/* Estilos para los textos si los agregas a las imágenes */
+.carousel .text {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    z-index: 2; /* Por encima del overlay */
+}
+
+
+/* Contenedor principal */
+.mapa-contenedor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+/* Mapa */
+.mapa-container {
+    flex: 1;
+}
+
+.mapa {
+    width: 100%;
+    max-width: 500px;
+    height: 350px;
+    border-radius: 15px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Descripción */
+.descripcion-mapa {
+    flex: 1;
+    text-align: left;
+    padding-left: 30px;
+    max-width: 400px;
+}
+
+.descripcion-mapa h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.descripcion-mapa p {
+    font-size: 18px;
+    margin: 8px 0;
+    color: #f9f9f9;
+}
+
+/* Botón atractivo */
+.boton-reservar {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #ff8800, #ff4444);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.boton-reservar:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff4444, #ff8800);
+}
+
+
+/* Responsivo */
+@media (max-width: 900px) {
+    .mapa-contenedor {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .descripcion-mapa {
+        text-align: center;
+        padding-left: 0;
+        margin-top: 20px;
+    }
+}
+

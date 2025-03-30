@@ -1,0 +1,868 @@
+{{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros | Restaurante San Felipe</title>
+    <link rel="stylesheet" href="{% static 'css/nosotros.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 70px;
+            overflow-x: hidden;
+            background: linear-gradient(120deg, #f0f2f5 0%, #d9e2ec 50%, #ff6f61 100%);
+            background-size: 300% 300%;
+            animation: waveGradient 15s ease infinite !important;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(255, 111, 97, 0.2) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(217, 226, 236, 0.2) 0%, transparent 50%);
+            animation: wavePulse 10s ease-in-out infinite !important;
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="20" cy="20" r="4" fill="rgba(255,111,97,0.5)"/><circle cx="60" cy="80" r="3" fill="rgba(255,111,97,0.4)"/><circle cx="140" cy="120" r="5" fill="rgba(255,111,97,0.3)"/><circle cx="180" cy="40" r="4" fill="rgba(255,111,97,0.4)"/></svg>');
+            background-size: 100px 100px;
+            animation: floatParticles 20s linear infinite !important;
+            opacity: 0.2;
+            z-index: -2;
+        }
+
+        @keyframes waveGradient {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        @keyframes wavePulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-40px, 40px); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Barra de navegación */
+        .navbar {
+            background: linear-gradient(135deg, #1e1e1e 0%, #333 100%);
+            color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            max-width: 100vw;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar .logo {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .navbar .navbar-title {
+            font-size: 26px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .navbar-title:hover {
+            color: #ff6f61;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger:hover {
+            color: #ff6f61;
+            transform: scale(1.1);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            transition: all 0.5s ease;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a:hover {
+            background: #ff6f61;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 111, 97, 0.3);
+        }
+
+        .cerrar-menu {
+            display: none;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .cerrar-menu:hover {
+            color: #ff6f61;
+            transform: rotate(180deg);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.activo {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -300px;
+                width: 300px;
+                height: 100%;
+                background: linear-gradient(135deg, #1e1e1e 0%, #2c2c2c 100%);
+                flex-direction: column;
+                padding: 80px 20px 20px;
+                box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3);
+                transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links.active .cerrar-menu {
+                display: block;
+            }
+
+            .nav-links a {
+                padding: 15px;
+                text-align: left;
+                border-radius: 10px;
+                font-size: 18px;
+                background: rgba(255, 111, 97, 0.1);
+                transition: all 0.3s ease;
+            }
+
+            .nav-links a:hover {
+                background: #ff6f61;
+                transform: translateX(10px);
+            }
+        }
+
+        /* Banner ajustado */
+        .banner {
+            position: relative;
+            height: 50vh;
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+            filter: brightness(60%);
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .banner-text {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            max-width: 90%;
+        }
+
+        .banner-text h1 {
+            font-size: 40px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .banner-text p {
+            font-size: 18px;
+            font-weight: 500;
+            color: #ff6f61;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .banner-text h1 {
+                font-size: 28px;
+            }
+            .banner-text p {
+                font-size: 14px;
+            }
+        }
+
+        /* Secciones generales */
+        .section {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        /* Nuestra Historia */
+        .historia-content {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 100%;
+        }
+
+        .historia-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .historia-text {
+            flex: 1;
+            color: #000000;
+        }
+
+        .historia-text h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6f61;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .historia-text h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #ff6f61;
+        }
+
+        .historia-text p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333333;
+        }
+
+        .historia-img {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .historia-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .historia-img:hover img {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .historia-content {
+                flex-direction: column;
+            }
+            .historia-img {
+                max-width: 100%;
+            }
+        }
+
+        /* Misión, Visión y Valores */
+        .mision-vision-valores {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 100%;
+        }
+
+        .mision-vision-valores:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .mvv-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+        }
+
+        .mision, .vision, .valores {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .mision:hover, .vision:hover, .valores:hover {
+            transform: scale(1.05);
+            background: #ff6f61;
+            color: #ffffff;
+        }
+
+        .mision h2, .vision h2, .valores h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ff6f61;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .mision:hover h2, .vision:hover h2, .valores:hover h2 {
+            color: #ffffff;
+        }
+
+        .mision h2::after, .vision h2::after, .valores h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background-color: #ff6f61;
+            transition: background 0.3s ease;
+        }
+
+        .mision:hover h2::after, .vision:hover h2::after, .valores:hover h2::after {
+            background-color: #ffffff;
+        }
+
+        .mision p, .vision p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333333;
+        }
+
+        .mision:hover p, .vision:hover p {
+            color: #ffffff;
+        }
+
+        .valores ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .valores ul li {
+            font-size: 16px;
+            line-height: 2;
+            color: #333333;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .valores:hover ul li {
+            color: #ffffff;
+        }
+
+        .valores ul li::before {
+            content: '✔';
+            position: absolute;
+            left: 0;
+            color: #ff6f61;
+            font-size: 18px;
+        }
+
+        .valores:hover ul li::before {
+            color: #ffffff;
+        }
+
+        /* Nuestro Equipo */
+        .equipo {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 100%;
+        }
+
+        .equipo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .titulo-seccion {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: #ff6f61;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 50px;
+            position: relative;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .titulo-seccion::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6f61, #ff8f80);
+            border-radius: 2px;
+        }
+
+        .equipo-categoria {
+            margin-bottom: 50px;
+            width: 100%;
+        }
+
+        .titulo-categoria {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(90deg, #ff6f61, #ff8f80);
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            width: 100%;
+        }
+
+        .titulo-categoria::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6f61, #ff8f80);
+            transition: width 0.3s ease;
+        }
+
+        .equipo-categoria:hover .titulo-categoria::after {
+            width: 80%;
+        }
+
+        .equipo-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .miembro {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 240px; /* Ancho fijo para consistencia */
+            max-width: 100%;
+        }
+
+        .miembro::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 111, 97, 0.1) 0%, transparent 70%);
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .miembro:hover::before {
+            top: 0;
+            left: 0;
+        }
+
+        .miembro:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(255, 111, 97, 0.3);
+            background: #fff;
+        }
+
+        .miembro img {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            border-radius: 50%;
+            border: 4px solid #ff6f61;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .miembro:hover img {
+            transform: scale(1.1);
+            border-color: #ff8f80;
+        }
+
+        .miembro h4 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff6f61;
+            margin: 0 0 8px;
+            transition: color 0.3s ease;
+        }
+
+        .miembro:hover h4 {
+            color: #ff8f80;
+        }
+
+        .miembro p {
+            font-size: 15px;
+            color: #555;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+
+        .miembro:hover p {
+            color: #333;
+        }
+
+        /* Animación fade-in */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="{% static 'img/1000032882.jpg' %}" alt="San Felipe Logo" class="logo">
+            <h1 class="navbar-title">San Felipe</h1>
+        </div>
+        <button class="hamburger"><i class="fas fa-bars"></i></button>
+        <nav class="nav-links">
+            <button class="cerrar-menu"><i class="fas fa-times"></i></button>
+            <a href="/"><i class="fas fa-home"></i> Inicio</a>
+            <a href="/tienda/"><i class="fas fa-utensils"></i> Carta</a>
+            <a href="/nosotros/"><i class="fas fa-info-circle"></i> Nosotros</a>
+            <a href="/sugerencias/"><i class="fas fa-comment"></i> Sugerencias</a>
+        </nav>
+    </div>
+
+    <div id="overlay" class="overlay"></div>
+
+    <header class="banner">
+        <video autoplay muted loop class="video-bg">
+            <source src="{% static 'videos/meseros.mp4' %}" type="video/mp4">
+            Tu navegador no soporta el video.
+        </video>
+        <div class="banner-overlay"></div>
+        <div class="banner-text">
+            <h1>Restaurante San Felipe</h1>
+            <p>Tradición, Innovación y Pasión por la Gastronomía</p>
+        </div>
+    </header>
+
+    <section class="section historia fade-in">
+        <div class="historia-content">
+            <div class="historia-text">
+                <h2>Nuestra Historia</h2>
+                <p>
+                    Desde 1995, Restaurante San Felipe ha sido un referente de la cocina tradicional con toques innovadores.
+                    Nuestro compromiso con la calidad y el servicio nos ha convertido en un destino gastronómico imperdible.
+                </p>
+            </div>
+            <div class="historia-img">
+                <img src="{% static 'img/restaurante-interior.jpg' %}" alt="Interior del restaurante">
+            </div>
+        </div>
+    </section>
+
+    <section class="section mision-vision-valores fade-in">
+        <div class="mvv-container">
+            <div class="mision">
+                <h2>Misión</h2>
+                <p>
+                    Brindar experiencias culinarias excepcionales, fusionando ingredientes frescos con técnicas innovadoras y
+                    un servicio de alta calidad para nuestros clientes.
+                </p>
+            </div>
+            <div class="vision">
+                <h2>Visión</h2>
+                <p>
+                    Ser reconocidos como el mejor restaurante de cocina tradicional con innovación en la región, expandiendo
+                    nuestra marca y creando un legado gastronómico.
+                </p>
+            </div>
+            <div class="valores">
+                <h2>Valores</h2>
+                <ul>
+                    <li>Pasión por la cocina</li>
+                    <li>Calidad y excelencia</li>
+                    <li>Innovación constante</li>
+                    <li>Compromiso con la comunidad</li>
+                    <li>Sostenibilidad y responsabilidad</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section equipo fade-in">
+        <h2 class="titulo-seccion">Nuestro Equipo</h2>
+
+        <div class="equipo-categoria">
+            <h3 class="titulo-categoria">👔 Administración</h3>
+            <div class="equipo-container">
+                <div class="miembro">
+                    <img src="{% static 'img/admin1.jpg' %}" alt="Gerente">
+                    <h4>Andrea Ramírez</h4>
+                    <p>Gerente General</p>
+                </div>
+                <div class="miembro">
+                    <img src="{% static 'img/admin2.jpg' %}" alt="Supervisor">
+                    <h4>Carlos Fernández</h4>
+                    <p>Supervisor de Operaciones</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="equipo-categoria">
+            <h3 class="titulo-categoria">🍽️ Cocina</h3>
+            <div class="equipo-container">
+                <div class="miembro">
+                    <img src="{% static 'img/chef1.jpg' %}" alt="Chef Principal">
+                    <h4>Juan Pérez</h4>
+                    <p>Chef Ejecutivo</p>
+                </div>
+                <div class="miembro">
+                    <img src="{% static 'img/chef2.jpg' %}" alt="Chef de Repostería">
+                    <h4>María López</h4>
+                    <p>Chef de Repostería</p>
+                </div>
+                <div class="miembro">
+                    <img src="{% static 'img/chef3.jpg' %}" alt="Cocinero">
+                    <h4>Pedro Gómez</h4>
+                    <p>Cocinero</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="equipo-categoria">
+            <h3 class="titulo-categoria">🛎️ Meseros</h3>
+            <div class="equipo-container">
+                <div class="miembro">
+                    <img src="{% static 'img/mesero1.jpg' %}" alt="Mesero">
+                    <h4>Lucas Medina</h4>
+                    <p>Mesero Principal</p>
+                </div>
+                <div class="miembro">
+                    <img src="{% static 'img/mesero2.jpg' %}" alt="Mesera">
+                    <h4>Ana Torres</h4>
+                    <p>Mesera</p>
+                </div>
+                <div class="miembro">
+                    <img src="{% static 'img/mesero3.jpg' %}" alt="Mesero">
+                    <h4>Diego Ríos</h4>
+                    <p>Mesero</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const elements = document.querySelectorAll('.fade-in');
+
+            function checkElements() {
+                const triggerBottom = window.innerHeight * 0.85;
+                elements.forEach(el => {
+                    const elTop = el.getBoundingClientRect().top;
+                    if (elTop < triggerBottom) {
+                        el.classList.add('visible');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', checkElements);
+            checkElements();
+
+            window.addEventListener('load', function() {
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.style.opacity = '1';
+                }, 100);
+            });
+
+            const hamburger = document.querySelector('.hamburger');
+            const cerrarMenu = document.querySelector('.cerrar-menu');
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.getElementById('overlay');
+
+            function toggleMenu() {
+                navLinks.classList.toggle('active');
+                overlay.classList.toggle('activo');
+                const isOpen = navLinks.classList.contains('active');
+                hamburger.querySelector('i').classList.toggle('fa-bars', !isOpen);
+                hamburger.querySelector('i').classList.toggle('fa-times', isOpen);
+            }
+
+            hamburger.addEventListener('click', toggleMenu);
+            cerrarMenu.addEventListener('click', toggleMenu);
+
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) {
+                    navLinks.classList.remove('active');
+                    overlay.classList.remove('activo');
+                    hamburger.querySelector('i').classList.add('fa-bars');
+                    hamburger.querySelector('i').classList.remove('fa-times');
+                }
+            });
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    overlay.classList.remove('activo');
+                    hamburger.querySelector('i').classList.add('fa-bars');
+                    hamburger.querySelector('i').classList.remove('fa-times');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

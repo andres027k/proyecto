@@ -1,0 +1,454 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - San Felipe</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #4b1c1c 100%);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar from previous pages */
+        .navbar {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: background 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .navbar:hover {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+        }
+
+        .navbar .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo-container .logo {
+            height: 60px;
+            transition: transform 0.4s ease, filter 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .logo-container .logo.reveal {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px) scale(0.9); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        .navbar .logo-container .logo:hover {
+            transform: scale(1.15) rotate(10deg);
+            filter: brightness(1.2);
+        }
+
+        .navbar .navbar-title {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-left: 15px;
+            letter-spacing: 1px;
+            transition: color 0.4s ease, transform 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .navbar-title.reveal {
+            animation: fadeInScale 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .navbar .navbar-title:hover {
+            color: #ff4b2b;
+            transform: scale(1.05);
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+            margin-left: auto;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: background-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            opacity: 0;
+        }
+
+        .navbar .nav-links a.reveal {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .navbar .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #ff4b2b;
+            transition: width 0.4s ease, left 0.4s ease;
+        }
+
+        .navbar .nav-links a:hover::after {
+            width: 60%;
+            left: 20%;
+        }
+
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 75, 43, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.3);
+        }
+
+        .navbar .perfil-link {
+            margin-right: 20px;
+            margin-left: 20px;
+        }
+
+        .navbar .perfil-link img {
+            height: 35px;
+            border-radius: 50%;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .perfil-link img.reveal {
+            animation: popIn 0.8s ease-out 0.4s forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.7) rotate(-10deg); }
+            70% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .navbar .perfil-link img:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+        }
+
+        /* Enhanced main content */
+        main {
+            padding: 120px 2rem 2rem; /* Space for fixed navbar */
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            color: #333;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            color: #ff0000; /* Red */
+            font-size: 28px;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #ff0000;
+            transition: width 0.3s ease;
+        }
+
+        h2:hover::after {
+            width: 100px;
+        }
+
+        h3 {
+            color: #000;
+            font-size: 20px;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p, ul {
+            line-height: 1.6;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        ul li::before {
+            content: '➤';
+            color: #ff0000;
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+        }
+
+        ul li strong {
+            color: #000;
+            font-weight: 600;
+        }
+
+        blockquote {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-left: 5px solid #ff0000;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* Enhanced footer */
+        footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            margin-top: auto;
+        }
+
+        .social-icons a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 18px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #ff0000;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="{% static 'img/1000032882.jpg' %}" alt="San Felipe Logo" class="logo reveal">
+            <h1 class="navbar-title reveal">San Felipe</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="/perfil/" class="reveal">Regresar</a>
+        </nav>
+    </div>
+
+    <main>
+        <section id="inicio">
+            <h2>Inicio</h2>
+            <p><strong>Funcionalidad de la página:</strong></p>
+            <ul>
+                <li><strong>Navegación:</strong> Puedes hacer clic en los enlaces del menú para acceder a las secciones Inicio, Carta, Nosotros y Sugerencias. Si tienes una cuenta, puedes hacer clic en el icono de perfil para gestionarla.</li>
+                <li><strong>Carrusel de Imágenes:</strong> Las imágenes del restaurante cambian automáticamente, mostrando diferentes platos y el ambiente del lugar.</li>
+                <li><strong>Sugerencias de Platos:</strong> Se muestra una selección de los platos más recomendados con su imagen y descripción. Cada plato tiene un botón "Ordenar" que te permite seleccionarlo para comprarlo.</li>
+                <li><strong>Ubicación y Contacto:</strong> La página incluye un mapa interactivo de Google Maps con la ubicación exacta del restaurante, además del horario de atención y teléfono de contacto.</li>
+                <li><strong>Redes Sociales:</strong> Puedes hacer clic en los iconos de Facebook, WhatsApp, Instagram y TikTok para seguirnos y mantenerte actualizado.</li>
+            </ul>
+        </section>
+
+        <section id="carta">
+            <h2>Tienda Online - San Felipe</h2>
+            <h3>Navegación</h3>
+            <ul>
+                <li>Utiliza el menú superior para acceder a <strong>Inicio, Carta, Nosotros</strong> y <strong>Contacto</strong>.</li>
+                <li>Haz clic en el icono del restaurante para volver a la página principal.</li>
+            </ul>
+            <h3>Explorar el Menú</h3>
+            <ul>
+                <li>El menú está dividido en dos secciones: <strong>"Platos del Día"</strong> y <strong>"Carta"</strong>.</li>
+                <li>Puedes cambiar entre ellas con los botones rojos en la parte superior.</li>
+            </ul>
+            <h3>Carrito de Compras</h3>
+            <ul>
+                <li>Cada plato tiene un botón <strong>"Añadir"</strong> para agregarlo al carrito.</li>
+                <li>El icono de carrito 🛒 muestra la cantidad de productos seleccionados.</li>
+                <li>Al hacer clic en el carrito, se abre una ventana con el resumen del pedido y el total.</li>
+                <li>Para finalizar la compra, presiona <strong>"Pagar"</strong> y serás redirigido a la página de compra.</li>
+            </ul>
+            <h3>Productos</h3>
+            <ul>
+                <li>Cada plato muestra su <strong>nombre, precio</strong> e <strong>imagen</strong>.</li>
+                <li>Si un producto no está disponible, el botón aparecerá desactivado en color gris.</li>
+            </ul>
+            <h3>Interacción y Diseño</h3>
+            <ul>
+                <li>La tienda permite cambiar de categorías sin necesidad de recargar la página.</li>
+                <li>Diseño atractivo con botones llamativos para mejorar la experiencia de usuario.</li>
+            </ul>
+        </section>
+
+        <section id="nosotros">
+            <h2>Nosotros</h2>
+            <p>Descubre quiénes somos y qué nos define como restaurante.</p>
+            <h3>Elementos principales:</h3>
+            <ul>
+                <li><strong>Encabezado y navegación:</strong> Un menú en la parte superior con enlaces a:
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#carta">Carta</a></li>
+                        <li><a href="#nosotros">Nosotros</a> (página actual)</li>
+                        <li><a href="#sugerencias">Sugerencias</a></li>
+                    </ul>
+                    Además, incluye un logotipo y el nombre del restaurante en la parte izquierda.
+                </li>
+            </ul>
+            <h3>Banner con vídeo de fondo</h3>
+            <ul>
+                <li>Un vídeo en bucle que proporciona una experiencia visual atractiva.</li>
+                <li>Texto superpuesto con el nombre del restaurante y su lema:</li>
+                <blockquote>"Tradición, Innovación y Pasión por la Gastronomía"</blockquote>
+            </ul>
+            <h3>Nuestra Historia</h3>
+            <ul>
+                <li>Desde 1995, San Felipe ha sido un referente gastronómico.</li>
+                <li>Se destaca por su cocina tradicional con toques innovadores.</li>
+                <li>Incluye una imagen del interior del restaurante.</li>
+            </ul>
+            <h3>Misión, Visión y Valores</h3>
+            <ul>
+                <li><strong>Misión:</strong> Ofrecer experiencias culinarias excepcionales con ingredientes frescos y un servicio de alta calidad.</li>
+                <li><strong>Visión:</strong> Convertirse en el mejor restaurante de cocina tradicional con innovación en la región.</li>
+                <li><strong>Valores:</strong>
+                    <ul>
+                        <li>Pasión por la cocina</li>
+                        <li>Calidad y excelencia</li>
+                        <li>Innovación constante</li>
+                        <li>Compromiso con la comunidad</li>
+                        <li>Sostenibilidad y responsabilidad</li>
+                    </ul>
+                </li>
+            </ul>
+            <h3>Nuestro Equipo</h3>
+            <p>Presentamos a los profesionales que hacen posible la experiencia San Felipe:</p>
+            <ul>
+                <li><strong>Administración:</strong> Gerente y Supervisor de Operaciones.</li>
+                <li><strong>Cocina:</strong> Chef Ejecutivo, Chef de Repostería y Cocinero.</li>
+                <li><strong>Meseros:</strong> Personal de servicio al cliente.</li>
+            </ul>
+            <p>Cada miembro tiene su foto, nombre y cargo, resaltando su importancia en el equipo.</p>
+            <h3>Animaciones y experiencia de usuario</h3>
+            <ul>
+                <li>Efecto de aparición (<em>fade-in</em>) al desplazarse.</li>
+                <li>Diseño atractivo, bien estructurado y enriquecido con imágenes.</li>
+            </ul>
+        </section>
+
+        <section id="sugerencias">
+            <h2>Sugerencias</h2>
+            <p><strong>Elementos principales:</strong></p>
+            <ul>
+                <li><strong>Encabezado y navegación:</strong>
+                    <ul>
+                        <li>Menú superior con enlaces a:
+                            <ul>
+                                <li><strong>Inicio</strong></li>
+                                <li><strong>Carta</strong></li>
+                                <li><strong>Nosotros</strong></li>
+                                <li><strong>Sugerencias</strong> (página actual)</li>
+                            </ul>
+                        </li>
+                        <li>Logotipo y nombre del restaurante en la parte izquierda.</li>
+                    </ul>
+                </li>
+                <li><strong>Formulario de Sugerencias:</strong>
+                    <ul>
+                        <li>Diseño estilizado con fondo blanco y bordes redondeados.</li>
+                        <li><strong>Título llamativo</strong> en rojo con efectos de sombra.</li>
+                        <li><strong>Campos de entrada</strong> con bordes resaltados que cambian de color al enfocar.</li>
+                        <li><strong>Botón de envío</strong> estilizado con efecto de escala al pasar el cursor.</li>
+                    </ul>
+                </li>
+                <li><strong>Mensaje de confirmación:</strong>
+                    <ul>
+                        <li>Si el usuario envía una sugerencia, aparece un <strong>mensaje de éxito</strong> en color verde.</li>
+                        <li>El mensaje desaparece automáticamente después de <strong>3 segundos</strong> gracias a JavaScript.</li>
+                    </ul>
+                </li>
+                <li><strong>Diseño y experiencia de usuario:</strong>
+                    <ul>
+                        <li>Uso de <strong>colores cálidos</strong> (tonos rojos representativos del restaurante).</li>
+                        <li><strong>Animaciones suaves</strong> en botones y campos del formulario para mejorar la interacción.</li>
+                        <li><strong>Diseño responsivo</strong>, centrado y bien estructurado para diferentes dispositivos.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll('section');
+        const options = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, options);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

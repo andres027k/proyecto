@@ -1,0 +1,355 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #111 40%,rgb(116, 49, 49) 100%);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Estilo para la barra de navegación */
+        .navbar {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+
+        .navbar:hover {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+        }
+
+        .navbar .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo-container .logo {
+            height: 60px;
+            transition: transform 0.4s ease, filter 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .logo-container .logo.reveal {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px) scale(0.9); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        .navbar .logo-container .logo:hover {
+            transform: scale(1.15) rotate(10deg);
+            filter: brightness(1.2);
+        }
+
+        .navbar .navbar-title {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-left: 15px;
+            letter-spacing: 1px;
+            transition: color 0.4s ease, transform 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .navbar-title.reveal {
+            animation: fadeInScale 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .navbar .navbar-title:hover {
+            color: #ff4b2b;
+            transform: scale(1.05);
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+            margin-left: auto;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: background-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            opacity: 0;
+        }
+
+        .navbar .nav-links a.reveal {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .navbar .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #ff4b2b;
+            transition: width 0.4s ease, left 0.4s ease;
+        }
+
+        .navbar .nav-links a:hover::after {
+            width: 60%;
+            left: 20%;
+        }
+
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 75, 43, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.3);
+        }
+
+        .navbar .perfil-link {
+            margin-right: 20px;
+            margin-left: 20px;
+        }
+
+        .navbar .perfil-link img {
+            height: 35px;
+            border-radius: 50%;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0;
+        }
+
+        .navbar .perfil-link img.reveal {
+            animation: popIn 0.8s ease-out 0.4s forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.7) rotate(-10deg); }
+            70% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .navbar .perfil-link img:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+        }
+
+        /* Estilos para el contenido principal */
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .titulo h1 {
+            text-align: center;
+            color: #ff0000;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .titulo h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background-color: #ff0000;
+        }
+
+        .perfil-info, .historial-compras, .acciones {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 25px;
+            color: #000000;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .perfil-info:hover, .historial-compras:hover, .acciones:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .perfil-info h2, .historial-compras h2 {
+            color: #ff0000;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .perfil-info h2::before, .historial-compras h2::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: #ff0000;
+            transition: width 0.3s ease;
+        }
+
+        .perfil-info:hover h2::before, .historial-compras:hover h2::before {
+            width: 60px;
+        }
+
+        .perfil-info p, .historial-compras p {
+            margin: 10px 0;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333333;
+        }
+
+        .perfil-info p strong, .historial-compras p strong {
+            color: #000000;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table th {
+            background: #ff0000;
+            color: #ffffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        table td {
+            color: #333333;
+        }
+
+        table tr {
+            transition: background 0.3s ease;
+        }
+
+        table tr:hover {
+            background: #f5f5f5;
+        }
+
+        table ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        table ul li {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555555;
+        }
+
+        .acciones {
+            text-align: center;
+        }
+
+        .logout-btn, .manual-btn {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .logout-btn:hover, .manual-btn:hover {
+            background: linear-gradient(135deg, #cc0000, #ff0000);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .logout-btn:active, .manual-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="{% static 'img/1000032882.jpg' %}" alt="San Felipe Logo" class="logo reveal">
+            <h1 class="navbar-title reveal">San Felipe</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="/" class="reveal">Regresar</a>
+        </nav>
+    </div>
+
+    <main>
+        <header class="titulo">
+            <h1>Perfil de Usuario</h1>
+        </header>
+
+        <section class="perfil-info">
+            <h2>Datos Personales</h2>
+            <p><strong>Nombre de usuario:</strong> {{ perfil.user.username }}</p> 
+            <p><strong>Email:</strong> {{ perfil.user.email }}</p>
+            <p><strong>Fecha de registro:</strong> {{ perfil.user.date_joined }}</p>
+            <p><strong>Teléfono:</strong> {{ perfil.telefono }}</p>
+            <p><strong>Dirección:</strong> {{ perfil.direccion }}</p>
+        </section>
+        
+        <section class="acciones">
+            <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Cerrar sesión</button>
+            </form>
+            <a href="{% url 'manual' %}" class="manual-btn">Manual de Usuario</a>
+            <a href="/historial" class="manual-btn">Historial de Compras</a>
+        </section>
+    </main>
+</body>
+</html>

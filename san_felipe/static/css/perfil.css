@@ -1,0 +1,139 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #111 40%,rgb(116, 49, 49) 100%);
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+/* Navbar */
+.navbar {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #222;
+    padding: 15px 40px;
+    color: white;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-container img {
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid #d32f2f;
+}
+
+.logo-container h1 {
+    color: #d32f2f;
+    font-size: 24px;
+}
+
+.navbar nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.navbar nav a:hover {
+    color: #d32f2f;
+}
+/* Contenido principal */
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #2c2c2c; /* Gris más oscuro para el contenido */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra moderna */
+}
+
+/* Título del perfil */
+.titulo h1 {
+    text-align: center;
+    color: #fff; /* Blanco */
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+/* Información de perfil */
+.perfil-info {
+    margin-bottom: 40px;
+}
+
+.perfil-info h2 {
+    font-size: 24px;
+    color: #fff; /* Blanco */
+    margin-bottom: 20px;
+}
+
+.perfil-info p {
+    font-size: 16px;
+    color: #bbb; /* Gris claro para texto */
+    margin: 10px 0;
+}
+
+.perfil-info strong {
+    color: #fff; /* Blanco */
+}
+
+/* Opciones */
+.acciones {
+    background-color: #333; /* Fondo gris oscuro */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaciado entre las opciones */
+    text-align: center;
+}
+
+.acciones h3 {
+    font-size: 20px;
+    color: #fff; /* Blanco */
+    margin-bottom: 15px;
+}
+
+/* Estilo de los botones de opciones */
+.acciones-btn, .logout-btn {
+    display: inline-block;
+    background-color: #e63946; /* Rojo */
+    color: #fff; /* Blanco */
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: auto; /* Ajuste el tamaño al contenido */
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.acciones-btn:hover, .logout-btn:hover {
+    background-color: #d62736; /* Rojo oscuro */
+}
+
+/* Sombra */
+.perfil-info, .acciones {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Detalles de la barra de navegación */
+.navbar .logo-container img {
+    max-height: 50px;
+    max-width: 50px;
+    border-radius: 50%;
+}
+
+
+/* Sección de opciones */
+.acciones {
+    margin-top: 30px;
+}
